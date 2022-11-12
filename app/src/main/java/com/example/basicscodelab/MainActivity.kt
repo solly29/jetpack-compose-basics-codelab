@@ -37,7 +37,7 @@ fun Greeting(name: String) {
     Surface(color = MaterialTheme.colorScheme.primary) {
         Text(
             text = "Hello $name!",
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(24.ddp)
         )
     }
 }
