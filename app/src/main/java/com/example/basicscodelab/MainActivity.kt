@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.Surface
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -65,6 +68,19 @@ fun Greeting(name: String) {
     var expanded by remember {
         mutableStateOf(false)
     }
+
+    // 애니메이션이 완료될때까지 값이 계속 업데이트된다
+    val extraPadding by animateDpAsState(
+        if(expanded) 48.dp else 0.dp,
+        /* 스프링 애니메이션 */
+        animationSpec = spring(
+            /* 튕겨지는 정도 */
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            /* 튕겨지는 속도 */
+            stiffness = Spring.StiffnessLow,
+        )
+    )
+
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
@@ -74,7 +90,7 @@ fun Greeting(name: String) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(bottom = if (expanded) 48.dp else 0.dp)
+                    .padding(bottom = extraPadding.coerceAtLeast(0.dp))
             ) {
                 Text(text = "Hello, ")
                 Text(text = name)
