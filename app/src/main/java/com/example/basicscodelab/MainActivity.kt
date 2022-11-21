@@ -5,11 +5,9 @@ import android.view.Surface
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +27,25 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MyApp(
+    modifier: Modifier = Modifier,
+    names: List<String> = listOf("World", "Compose")
+) {
+    var shouldShowInBoarding by remember {
+        mutableStateOf(true)
+    }
+    Surface(modifier) {
+        if(shouldShowInBoarding) {
+            OnBoardingScreen {
+                shouldShowInBoarding = false
+            }
+        } else {
+            Greetings()
+        }
+    }
+}
+
+@Composable
+private fun Greetings(
     modifier: Modifier = Modifier,
     names: List<String> = listOf("World", "Compose")
 ) {
@@ -54,7 +71,7 @@ fun Greeting(name: String) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(bottom = if(expanded) 48.dp else 0.dp)
+                    .padding(bottom = if (expanded) 48.dp else 0.dp)
             ) {
                 Text(text = "Hello, ")
                 Text(text = name)
@@ -78,6 +95,55 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     BasicsCodelabTheme {
-        MyApp()
+        MyApp(Modifier.fillMaxSize())
+    }
+}
+
+@Composable
+fun OnBoardingScreen(
+    modifier: Modifier = Modifier,
+    onContinueClicked: () -> Unit
+) {
+    var shouldShowOnBoarding by remember {
+        mutableStateOf(true)
+    }
+
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Welcome to the Basics Codelab!")
+        Button(
+            onClick = onContinueClicked,
+            modifier = Modifier.padding(vertical = 24.dp)
+        ) {
+            Text(text = "Continue")
+        }
+    }
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 320,
+    heightDp = 320
+)
+@Composable
+fun OnBoardingPreview() {
+    BasicsCodelabTheme {
+        OnBoardingScreen {
+
+        }
+    }
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 320
+)
+@Composable
+private fun GreetingPreview() {
+    BasicsCodelabTheme {
+        Greetings()
     }
 }
